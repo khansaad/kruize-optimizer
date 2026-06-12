@@ -24,7 +24,7 @@ patches:
                   # New - comma-separated list of datasources (takes precedence over single datasource)
                   # Example: "thanos-1,prometheus-1"
                   - name: KRUIZE_DEFAULT_DATASOURCES
-                    value: "thanos-1"
+                    value: "thanos-1,cryostat-2"
     target:
       kind: Deployment
       name: kruize-optimizer

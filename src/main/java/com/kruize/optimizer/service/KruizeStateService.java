@@ -162,23 +162,16 @@ public class KruizeStateService {
             for (String name : names) {
                 String trimmedName = name.trim();
                 if (!trimmedName.isEmpty()) {
-                    // Verify datasource exists in cache
-                    boolean exists = cachedDatasources.stream()
-                            .anyMatch(ds -> trimmedName.equals(ds.getName()));
-                    if (exists) {
-                        result.add(trimmedName);
-                    }
+                    result.add(trimmedName);
+                    LOG.debugf("Added datasource from config: %s", trimmedName);
                 }
             }
         }
         
         // Fall back to old single datasource config if new config is empty
         if (result.isEmpty() && defaultDatasource != null && !defaultDatasource.trim().isEmpty()) {
-            boolean exists = cachedDatasources.stream()
-                    .anyMatch(ds -> defaultDatasource.equals(ds.getName()));
-            if (exists) {
-                result.add(defaultDatasource);
-            }
+            result.add(defaultDatasource);
+            LOG.debugf("Added datasource from legacy config: %s", defaultDatasource);
         }
         
         // If still empty, use first available datasource
@@ -186,6 +179,7 @@ public class KruizeStateService {
             result.add(cachedDatasources.get(0).getName());
         }
         
+        LOG.debugf("Returning %d datasource(s): %s", result.size(), result);
         return result;
     }
 
