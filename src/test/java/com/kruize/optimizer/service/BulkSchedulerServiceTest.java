@@ -28,6 +28,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -95,7 +97,7 @@ class BulkSchedulerServiceTest {
     void testScheduledBulkApiCall_Success() {
         // Arrange
         when(kruizeStateService.isCacheEmpty()).thenReturn(false);
-        when(kruizeStateService.getDefaultDatasourceName()).thenReturn(Optional.of("prometheus-1"));
+        when(kruizeStateService.getDefaultDatasourceNames()).thenReturn(List.of("prometheus-1"));
         when(kruizeStateService.getDefaultMetadataProfileName()).thenReturn(Optional.of("cluster-metadata-local-monitoring"));
         when(kruizeStateService.getDefaultMetricProfileName()).thenReturn(Optional.of("resource-optimization-local-monitoring"));
         when(kruizeClient.bulkCreateExperiments(any())).thenReturn(mockBulkApiResponse);
@@ -116,10 +118,10 @@ class BulkSchedulerServiceTest {
 
         assertNotNull(payload);
         assertTrue(payload.containsKey("filter"));
-        assertTrue(payload.containsKey("datasource"));
+        assertTrue(payload.containsKey("datasources"));
         assertTrue(payload.containsKey("metadata_profile"));
         assertTrue(payload.containsKey("measurement_duration"));
-        assertEquals("prometheus-1", payload.get("datasource"));
+        assertEquals(List.of("prometheus-1"), payload.get("datasources"));
         assertEquals("cluster-metadata-local-monitoring", payload.get("metadata_profile"));
         assertEquals(measurementDuration, payload.get("measurement_duration"));
     }
@@ -145,21 +147,21 @@ class BulkSchedulerServiceTest {
     }
 
     /**
-     * Test scheduled bulk API call when no datasource is available
+     * Test scheduled bulk API call when no datasources are available
      *
      * Test Description: Verifies that the scheduled bulk API call does not execute
-     * when no datasource is configured in Kruize.
+     * when no datasources are configured in Kruize.
      *
      * Expected Behavior:
      * - Bulk API not called
      * - Jobs counter not incremented
-     * - Service logs error about missing datasource
+     * - Service logs error about missing datasources
      */
     @Test
     void testScheduledBulkApiCall_NoDatasource() {
         // Arrange
         when(kruizeStateService.isCacheEmpty()).thenReturn(false);
-        when(kruizeStateService.getDefaultDatasourceName()).thenReturn(Optional.empty());
+        when(kruizeStateService.getDefaultDatasourceNames()).thenReturn(Collections.emptyList());
 
         // Act
         bulkSchedulerService.initialize();
@@ -241,7 +243,7 @@ class BulkSchedulerServiceTest {
         // Arrange
         when(kruizeStateService.isCacheEmpty()).thenReturn(true);
         doNothing().when(kruizeStateService).refreshState();
-        when(kruizeStateService.getDefaultDatasourceName()).thenReturn(Optional.of("prometheus-1"));
+        when(kruizeStateService.getDefaultDatasourceNames()).thenReturn(List.of("prometheus-1"));
         when(kruizeStateService.getDefaultMetadataProfileName()).thenReturn(Optional.of("cluster-metadata-local-monitoring"));
         when(kruizeStateService.getDefaultMetricProfileName()).thenReturn(Optional.of("resource-optimization-local-monitoring"));
         when(kruizeClient.bulkCreateExperiments(any())).thenReturn(mockBulkApiResponse);
@@ -272,7 +274,7 @@ class BulkSchedulerServiceTest {
     void testScheduledBulkApiCall_ExceptionHandling() {
         // Arrange
         when(kruizeStateService.isCacheEmpty()).thenReturn(false);
-        when(kruizeStateService.getDefaultDatasourceName()).thenReturn(Optional.of("prometheus-1"));
+        when(kruizeStateService.getDefaultDatasourceNames()).thenReturn(List.of("prometheus-1"));
         when(kruizeStateService.getDefaultMetadataProfileName()).thenReturn(Optional.of("cluster-metadata-local-monitoring"));
         when(kruizeStateService.getDefaultMetricProfileName()).thenReturn(Optional.of("resource-optimization-local-monitoring"));
         when(kruizeClient.bulkCreateExperiments(any())).thenThrow(new RuntimeException("API error"));
