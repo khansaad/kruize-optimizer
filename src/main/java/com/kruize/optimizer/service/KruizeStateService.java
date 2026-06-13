@@ -150,14 +150,20 @@ public class KruizeStateService {
     /**
      * Get the default datasource names as a list
      * Supports both new comma-separated format and old single datasource format
+     * The old single datasource format takes precedence for backward compatibility
      *
      * @return List of datasource names, never null
      */
     public List<String> getDefaultDatasourceNames() {
         List<String> result = new ArrayList<>();
         
-        // First, try to use the new comma-separated datasources config
-        if (defaultDatasources.isPresent() && !defaultDatasources.get().trim().isEmpty()) {
+        // First, check the old single datasource config (takes precedence for backward compatibility)
+        if (defaultDatasource != null && !defaultDatasource.trim().isEmpty()) {
+            result.add(defaultDatasource);
+            LOG.debugf("Added datasource from legacy config (takes precedence): %s", defaultDatasource);
+        }
+        // If old config is not set, use the new comma-separated datasources config
+        else if (defaultDatasources.isPresent() && !defaultDatasources.get().trim().isEmpty()) {
             String[] names = defaultDatasources.get().split(",");
             for (String name : names) {
                 String trimmedName = name.trim();
@@ -166,12 +172,6 @@ public class KruizeStateService {
                     LOG.debugf("Added datasource from config: %s", trimmedName);
                 }
             }
-        }
-        
-        // Fall back to old single datasource config if new config is empty
-        if (result.isEmpty() && defaultDatasource != null && !defaultDatasource.trim().isEmpty()) {
-            result.add(defaultDatasource);
-            LOG.debugf("Added datasource from legacy config: %s", defaultDatasource);
         }
         
         // If still empty, use first available datasource
