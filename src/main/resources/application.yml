@@ -52,7 +52,7 @@ kruize:
     datasource: ${KRUIZE_DEFAULT_DATASOURCE:prometheus-1}
     # Default datasources (comma-separated list, e.g., "prometheus-1,prometheus-2")
     # Takes precedence over single datasource config
-    datasources: ${KRUIZE_DEFAULT_DATASOURCES:}
+    datasources: ${KRUIZE_DATASOURCES:}
     # Default metadata profile name
     metadata-profile: ${KRUIZE_DEFAULT_METADATA_PROFILE:cluster-metadata-local-monitoring}
     # Default metric profile name

@@ -65,15 +65,15 @@ spec:
               value: '{"kruize/autotune": "enabled"}'
             
             # Default Configuration
-            # Default datasource name (deprecated - use KRUIZE_DEFAULT_DATASOURCES for multi-datasource support)
+            # Default datasource name
             - name: KRUIZE_DEFAULT_DATASOURCE
               value: "prometheus-1"
             
-            # Default datasources (comma-separated list for multi-datasource support)
+            # Datasources (comma-separated list for multi-datasource support)
             # Takes precedence over single datasource config
             # Example: "prometheus-1,prometheus-2"
-            - name: KRUIZE_DEFAULT_DATASOURCES
-              value: "prometheus-1"
+            - name: KRUIZE_DATASOURCES
+              value: "prometheus-1, thanos-1"
             
             # Default metadata profile name
             - name: KRUIZE_DEFAULT_METADATA_PROFILE

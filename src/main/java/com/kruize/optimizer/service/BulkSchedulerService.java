@@ -212,8 +212,16 @@ public class BulkSchedulerService {
         filter.put(BulkSchedulerConstants.INCLUDE, include);
         payload.put(BulkSchedulerConstants.FILTER, filter);
 
-        // Add datasources list from global state
-        payload.put(BulkSchedulerConstants.DATASOURCES, datasources);
+        // Add datasources based on availability:
+        // - If list is present, use the new 'datasources' field (supports multiple datasources)
+        // - If list is absent/empty, fall back to deprecated 'datasource' field (single datasource)
+        if (!datasources.isEmpty()) {
+            payload.put(BulkSchedulerConstants.DATASOURCES, datasources);
+        } else {
+            // This case should not occur as we check for empty datasources earlier,
+            // but kept for completeness
+            payload.put(BulkSchedulerConstants.DATASOURCE, null);
+        }
 
         // Add metadata profile from global state
         payload.put(BulkSchedulerConstants.METADATA_PROFILE, metadataProfile);
