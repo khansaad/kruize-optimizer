@@ -26,6 +26,7 @@ import org.jboss.logging.Logger;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -150,9 +151,9 @@ public class KruizeStateService {
      * @return Optional datasource name
      */
     public Optional<String> getDefaultDatasourceName() {
-        // Try to find the default datasource first
+        // Try to find the default datasource first (with null-safe comparison)
         Optional<String> defaultDs = cachedDatasources.stream()
-                .filter(ds -> defaultDatasource.equals(ds.getName()))
+                .filter(ds -> Objects.equals(defaultDatasource, ds.getName()))
                 .map(Datasource::getName)
                 .findFirst();
         
@@ -173,9 +174,9 @@ public class KruizeStateService {
      * @return Optional cluster name
      */
     public Optional<String> getClusterNameFromDatasource() {
-        // Get the default datasource
+        // Get the default datasource (with null-safe comparison)
         Optional<Datasource> datasource = cachedDatasources.stream()
-                .filter(ds -> defaultDatasource.equals(ds.getName()))
+                .filter(ds -> Objects.equals(defaultDatasource, ds.getName()))
                 .findFirst();
         
         if (datasource.isEmpty()) {
@@ -213,10 +214,10 @@ public class KruizeStateService {
      * @return Optional metadata profile name
      */
     public Optional<String> getDefaultMetadataProfileName() {
-        // Try to find the default metadata profile first
+        // Try to find the default metadata profile first (with null-safe comparison)
         Optional<String> defaultProfile = cachedMetadataProfiles.stream()
-                .filter(p -> defaultMetadataProfile.equals(p.getName()))
                 .map(KruizeProfile::getName)
+                .filter(name -> Objects.equals(defaultMetadataProfile, name))
                 .findFirst();
         
         if (defaultProfile.isPresent()) {
@@ -235,10 +236,10 @@ public class KruizeStateService {
      * @return Optional metric profile name
      */
     public Optional<String> getDefaultMetricProfileName() {
-        // Try to find the default metric profile first
+        // Try to find the default metric profile first (with null-safe comparison)
         Optional<String> defaultProfile = cachedMetricProfiles.stream()
-                .filter(p -> defaultMetricProfile.equals(p.getName()))
                 .map(KruizeProfile::getName)
+                .filter(name -> Objects.equals(defaultMetricProfile, name))
                 .findFirst();
         
         if (defaultProfile.isPresent()) {

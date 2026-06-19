@@ -70,7 +70,7 @@ public class BulkSchedulerService {
     @ConfigProperty(name = "kruize.model.defaults", defaultValue = "performance")
     String defaultModels;
 
-    @ConfigProperty(name = "kruize.term.defaults", defaultValue = "long")
+    @ConfigProperty(name = "kruize.term.defaults", defaultValue = "short")
     String defaultTerms;
 
     private final Set<String> completedJobs = Collections.newSetFromMap(new java.util.concurrent.ConcurrentHashMap<>());
