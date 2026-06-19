@@ -167,6 +167,29 @@ public class KruizeStateService {
     }
 
     /**
+     * Get the cluster name from the default datasource
+     * Returns the first cluster name found in the datasource
+     *
+     * @return Optional cluster name
+     */
+    public Optional<String> getClusterNameFromDatasource() {
+        // Get the default datasource
+        Optional<Datasource> datasource = cachedDatasources.stream()
+                .filter(ds -> defaultDatasource.equals(ds.getName()))
+                .findFirst();
+        
+        if (datasource.isEmpty()) {
+            // Fall back to first available datasource
+            datasource = cachedDatasources.stream().findFirst();
+        }
+        
+        // Extract first cluster name from the list
+        return datasource
+                .filter(ds -> ds.getClusters() != null && !ds.getClusters().isEmpty())
+                .map(ds -> ds.getClusters().get(0));
+    }
+
+    /**
      * Get all cached datasources
      *
      * @return List of datasources
