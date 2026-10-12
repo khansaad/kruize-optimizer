@@ -4,8 +4,12 @@ quarkus:
     level: INFO
     category:
       "com.kruize.optimizer":
-        level: DEBUG
-  
+        level: "OFF"
+      "io.quarkus.kubernetes.client.deployment":
+        level: "OFF"
+      "io.micrometer":
+        level: ERROR
+
   # Use different port for tests to avoid conflicts
   http:
     port: 8082
