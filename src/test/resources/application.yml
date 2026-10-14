@@ -4,20 +4,12 @@ quarkus:
     level: INFO
     category:
       "com.kruize.optimizer":
-        level: "OFF"
-      "io.quarkus.kubernetes.client.deployment":
-        level: "OFF"
-      "io.micrometer":
-        level: ERROR
-
+        level: DEBUG
+  
   # Use different port for tests to avoid conflicts
   http:
     port: 8082
     test-port: 8082
-
-  # Disable scheduled tasks during tests
-  scheduler:
-    enabled: false
 
 # Kruize client configuration for tests (mocked in tests)
 kruize:
@@ -47,3 +39,8 @@ kruize:
   state:
     refresh:
       interval: 30m
+
+  # REST client configuration (mocked in tests)
+  rest-client:
+    kruize-api:
+      url: http://kruize:8080
